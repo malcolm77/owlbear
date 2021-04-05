@@ -1,0 +1,9 @@
+ip_address: 192.168.1.150
+api_key: "qxb5PJleolvND8RAvqokpuj1eM7o4N--9bdavDAs"
+sensors:
+  # With `match_names` set, the exporter will set the names of temperature
+  # sensors and light level sensors to that of the motion sensor (the one that
+  # you've actually configured in the Hue app)
+  match_names: true
+  ignore_types:
+  - CLIPGenericStatus

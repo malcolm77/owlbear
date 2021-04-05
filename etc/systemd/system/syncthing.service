@@ -1,0 +1,13 @@
+[Unit]
+Description=Syncthing
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=syncthing
+Group=syncthing
+Type=simple
+ExecStart=/usr/local/bin/syncthing/syncthing
+
+[Install]
+WantedBy=multi-user.target

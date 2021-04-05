@@ -1,0 +1,13 @@
+[Unit]
+Description=SpeedTest Exporter
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=root
+Group=root
+Type=simple
+ExecStart=/usr/local/bin/hue_exporter --config.file /etc/prometheus/hue_exporter.yml --listen.address :9366
+
+[Install]
+WantedBy=multi-user.target

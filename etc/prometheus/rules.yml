@@ -1,0 +1,56 @@
+groups:
+#- name: MotionEyeServiceDown
+#  rules:
+#  - alert: MotionEye Service is Down
+#    expr: node_systemd_unit_state{instance="pizero:9100",job="raspberry",name="motioneye.service",state="active",type="simple"} != 1
+#    for: 1m
+#    annotations:
+#      title: 'Service Stopped'
+#      description: "The service {{ $labels.name }} on {{ $labels.instance }} has stopped."
+#    labels:
+#      severity: 'warning'
+
+- name: RaspberryPiStatus
+  rules:
+  - alert: Host Down
+    expr: label_replace(up{job="raspberry"}, "short_hostname", "$1", "instance", "(.*):.*") == 0
+    for: 1m
+    annotations:
+      description: "One of the Raspberry Pis' has gone down."
+    labels:
+      severity: 'critical'
+
+- name: WindowsDiskSpace
+  rules:
+  - alert: Low Disk Space
+    expr: ((windows_logical_disk_free_bytes{instance="tvpc:9182",job="windows",volume="D:"}/1024/1024/1024)/(windows_logical_disk_size_bytes{instance="tvpc:9182",job="windows",volume="D:"}/1024/1024/1024)*100) < 10
+    for: 1m
+    annotations:
+      title: 'Low Disk Space on {{ $labels.instance }}'
+      description: 'The Drive {{ $labels.volume }} on {{ $labels.instance }} is at {{ $value }} percent free space.'
+    labels:
+      severity: 'critical'
+
+- name: Disk Space Warning Alert
+  rules:
+  - alert: Low Disk Space Warning Alert
+    expr: node_filesystem_free_bytes{instance="owlbear:9100",mountpoint="/mnt"} < 3984089088
+    for: 1m
+    annotations:
+      title: 'Low Disk Space on {{ $labels.instance }}'
+      description: 'The Drive {{ $labels.volume }} on {{ $labels.instance }} is at {{ $value }} percent free space.'
+    labels:
+      severity: 'warning'
+
+- name: Disk Space Critical Alert
+  rules:
+  - alert: Low Disk Space Critical Alert
+    expr: node_filesystem_free_bytes{instance="owlbear:9100",mountpoint="/"} < 2984089088
+    for: 1m
+    annotations:
+      title: 'Low Disk Space on {{ $labels.instance }}'
+      description: 'The Drive {{ $labels.volume }} on {{ $labels.instance }} is at {{ $value }} percent free space.'
+    labels:
+      severity: 'critical'
+
+

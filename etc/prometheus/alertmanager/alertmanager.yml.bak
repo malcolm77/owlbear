@@ -1,0 +1,34 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  group_by: ['alertname']
+  group_wait: 10s
+  group_interval: 10s
+  repeat_interval: 24h
+  # receiver: 'web.hook'
+  receiver: 'gmail-notifications'
+
+receivers:
+- name: 'web.hook'
+  webhook_configs:
+  - url: 'http://127.0.0.1:5001/'
+- name: 'gmail-notifications'
+  email_configs:
+  - to: malcolmchalmers@hotmail.com
+    from: systemalerts16@gmail.com
+    smarthost: smtp.gmail.com:587
+    auth_username: systemalerts16@gmail.com
+    auth_identity: systemalerts16@gmail.com
+    auth_password: cZ6evfDN3N5G
+    send_resolved: true
+
+inhibit_rules:
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname', 'dev', 'instance']
+
+templates:
+  - '/etc/prometheus/alert_manager/templates/default.tmpl'

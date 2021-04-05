@@ -1,0 +1,38 @@
+global:
+  resolve_timeout: 5m
+  smtp_smarthost: 'smtp.gmail.com:587'
+
+  smtp_from: 'systemalerts16@gmail.com'
+  smtp_auth_username: 'systemalerts16@gmail.com'
+  smtp_auth_identity: 'systemalerts16@gmail.com'
+  smtp_auth_password: 'cymrlehruerrpnkw'
+
+route:
+  group_by: ['alertname']
+  group_wait: 10s
+  group_interval: 10s
+  repeat_interval: 24h
+  receiver: 'gmail-notifications'
+  routes:
+  - match_re:
+      severity: warning|critical
+    receiver: gmail-notifications
+
+receivers:
+- name: 'gmail-notifications'
+  email_configs:
+  - to: malcolmchalmers@hotmail.com
+    send_resolved: true
+    html: '{{ template "email.plain.html" . }}'
+    headers: 
+      subject: '{{ template "email.default.subject" . }}'
+
+inhibit_rules:
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname', 'dev', 'instance']
+
+templates:
+  - '/etc/prometheus/alertmanager/templates/default.tmpl'

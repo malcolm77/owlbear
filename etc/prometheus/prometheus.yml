@@ -1,0 +1,63 @@
+# my global config
+global:
+  scrape_interval:     15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+  evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
+  scrape_timeout:      15s #  is set to the global default (10s).
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+  - static_configs:
+    - targets:
+      - owlbear:9093
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files:
+  - "/etc/prometheus/rules.yml"
+  # - "second_rules.yml"
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+  - job_name: 'raspberry'
+    static_configs:
+    - targets: ['pihole:9100','pizero:9100','rpi3:9100']
+
+#  - job_name: 'windows'
+#    static_configs:
+#    - targets: ['tvpc:9182']
+
+  - job_name: 'linux'
+    static_configs:
+    - targets: ['owlbear:9100'] #,'bugbear:9100']
+
+  - job_name: 'pihole'
+    static_configs:
+    - targets: ['owlbear:9617']
+
+  - job_name: 'snmp'
+    static_configs:
+      - targets:
+        - 192.168.1.1  # SNMP device.
+    metrics_path: /snmp
+    params:
+      module: [if_mib]
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: owlbear:9116  # The SNMP exporter's real hostname:port.
+
+  - job_name: 'speedtest'
+    scrape_interval: 5m
+    scrape_timeout: 1m
+    static_configs:
+      - targets: ['owlbear:9112']
+
+  - job_name: 'hue'
+    static_configs:
+      - targets: ['owlbear:9366']
+
+
