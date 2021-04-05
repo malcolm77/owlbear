@@ -1,0 +1,9 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: download hosts file 
+      get_url: 
+        url: https://raw.githubusercontent.com/malcolm77/LinuxScripts/master/hosts/hosts
+        dest: /etc/hosts
+        mode: '0644'

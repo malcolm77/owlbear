@@ -1,0 +1,6 @@
+---
+- hosts: all
+  tasks:
+  - name : check id of roo
+    shell:
+      cmd: id root
