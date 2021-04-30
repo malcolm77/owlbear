@@ -1,4 +1,4 @@
-
+<pre>
 …or create a new repository on the command line
 echo "# owlbear" >> README.md
 git init
@@ -12,3 +12,4 @@ git push -u origin main
 git remote add origin git@github.com:malcolm77/owlbear.git
 git branch -M main
 git push -u origin main
+</pre>
