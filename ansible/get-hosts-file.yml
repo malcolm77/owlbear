@@ -1,3 +1,4 @@
+# this Ansible playbook to update the hosts file from my GitHub repo
 ---
 - hosts: all
   become: yes
